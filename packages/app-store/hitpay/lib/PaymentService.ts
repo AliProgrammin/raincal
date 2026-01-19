@@ -1,16 +1,16 @@
-import axios from "axios";
-import qs from "qs";
-import { v4 as uuidv4 } from "uuid";
-import type z from "zod";
-
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import { ErrorCode } from "@calcom/lib/errorCodes";
+import { HttpError } from "@calcom/lib/http-error";
 import logger from "@calcom/lib/logger";
 import { safeStringify } from "@calcom/lib/safeStringify";
 import prisma from "@calcom/prisma";
 import type { Booking, Payment, PaymentOption, Prisma } from "@calcom/prisma/client";
 import type { CalendarEvent } from "@calcom/types/Calendar";
 import type { IAbstractPaymentService } from "@calcom/types/PaymentService";
+import axios from "axios";
+import qs from "qs";
+import { v4 as uuidv4 } from "uuid";
+import type z from "zod";
 
 import appConfig from "../config.json";
 import { API_HITPAY, SANDBOX_API_HITPAY } from "./constants";
@@ -89,7 +89,7 @@ class HitPayPaymentService implements IAbstractPaymentService {
         }
       } else {
         if (bookingsWithSameTimeSlot.length > 1) {
-          throw new Error(ErrorCode.NoAvailableUsersFound);
+          throw new HttpError({ statusCode: 409, message: ErrorCode.NoAvailableUsersFound });
         }
       }
 
