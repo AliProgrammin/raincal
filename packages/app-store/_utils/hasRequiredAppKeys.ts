@@ -5,11 +5,6 @@ import type { z } from "zod";
 
 /**
  * Checks if an app has all required keys set and non-empty.
- * Returns true if:
- * - App has no key schema (no keys required)
- * - App has a key schema and all required keys are present and non-empty
- * Returns false if:
- * - App has a key schema but keys are missing or empty
  * 
  * @param dirName - The directory name of the app
  * @param keys - The keys object from the database
@@ -25,7 +20,6 @@ export async function hasRequiredAppKeys(
     return true;
   }
 
-  // Validate keys against schema using safeParse
   const result = keySchema.safeParse(keys);
 
   return result.success;
